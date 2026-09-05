@@ -4,11 +4,10 @@ from tqdm import tqdm
 from metric import Metric
 
 class Trainer:
-    def __init__(self, model,opt,scheduler,criterion,device,save_path,id2label,cfg,patience=3):
+    def __init__(self, model,opt,scheduler,device,save_path,id2label,cfg,patience=3):
         self.model = model
         self.opt = opt
         self.scheduler = scheduler
-        self.criterion = criterion
         self.device = device
         self.save_path = save_path
         self.id2label = id2label
@@ -80,14 +79,16 @@ class Trainer:
             labels = batch["labels"].to(self.device)
             
             self.opt.zero_grad()
-            logits = self.model(input_ids, mask)
-            loss = self.criterion(logits.permute(0, 2, 1), labels)
+
+            out = self.model(input_ids, mask, labels)
+            loss = out["loss"]
+            logits = out["logits"]
+            
             loss.backward()
             self.opt.step()
             self.scheduler.step()
             
             total_loss += loss.item()
-
             batch_pred, batch_true = self._decode_batch(logits, labels)
             pred_tags.extend(batch_pred)
             true_tags.extend(batch_true)
@@ -110,8 +111,9 @@ class Trainer:
                 mask = batch["attention_mask"].to(self.device)
                 labels = batch["labels"].to(self.device)
                 
-                logits = self.model(input_ids, mask)
-                loss = self.criterion(logits.permute(0, 2, 1), labels)
+                out = self.model(input_ids, mask, labels)
+                loss = out["loss"]
+                logits = out["logits"]
                 total_loss += loss.item()
 
                 batch_pred, batch_true = self._decode_batch(logits, labels)
@@ -139,8 +141,9 @@ class Trainer:
                 mask = batch["attention_mask"].to(self.device)
                 labels = batch["labels"].to(self.device)
                 
-                logits = self.model(input_ids, mask)
-
+                out = self.model(input_ids, mask, labels)
+                logits = out["logits"]
+                
                 batch_pred, batch_true = self._decode_batch(logits, labels)
                 pred_tags.extend(batch_pred)
                 true_tags.extend(batch_true)
