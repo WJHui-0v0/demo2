@@ -75,10 +75,14 @@ def main():
 
     model = BERTNER(cfg).to(device)
     
-    optimizer = AdamW(model.parameters(), lr=cfg["lr"])
+    optimizer = AdamW(
+        model.parameters(), 
+        lr=cfg["lr"],
+        weight_decay=cfg["weight_decay"]
+    )
     
     total_steps = len(train_loader) * cfg["epochs"]
-    warmup_steps = int(0.1 * total_steps)
+    warmup_steps = int(cfg["warmup_ratio"] * total_steps)
         
     scheduler = get_linear_schedule_with_warmup(
         optimizer,
@@ -99,9 +103,8 @@ def main():
         patience = 3
     )
     
-    epochs = 8
-    for epoch in range(epochs):
-        print(f"Epoch {epoch+1}/{epochs}")
+    for epoch in range(cfg["epochs"]):
+        print(f"Epoch {epoch+1}/{cfg['epochs']}")
         train_loss, train_p, train_r,train_f1 = trainer.train_epoch(train_loader)
         print(f"Train Loss: {train_loss:.4f}, P: {train_p:.4f}, R: {train_r:.4f}, F1: {train_f1:.4f}")
         dev_loss, dev_p, dev_r, dev_f1, _, _, early_stop = trainer.eval_epoch(dev_loader,is_dev=True)
