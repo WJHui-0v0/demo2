@@ -4,7 +4,7 @@ from tqdm import tqdm
 from metric import Metric
 
 class Trainer:
-    def __init__(self, model,opt,scheduler,criterion,device,save_path,id2label,patience=3):
+    def __init__(self, model,opt,scheduler,criterion,device,save_path,id2label,cfg,patience=3):
         self.model = model
         self.opt = opt
         self.scheduler = scheduler
@@ -12,21 +12,29 @@ class Trainer:
         self.device = device
         self.save_path = save_path
         self.id2label = id2label
+        self.cfg = cfg
         self.best_dev_f1 = float("-inf")
         
         self.patience = patience      
         self.early_stop_counter = 0   
         self.early_stop = False
+        self.current_epoch = 0
         
     def early_stop_check(self, current_f1):
         if current_f1 >= self.best_dev_f1:
             self.best_dev_f1 = current_f1
             self.early_stop_counter = 0
             checkpoint = {
-                "model_state_dict": self.model.state_dict(),       # 神经网络权重参数
-                "optimizer_state_dict": self.opt.state_dict(),     # 优化器内部状态(动量等)
-                "scheduler_state_dict": self.scheduler.state_dict(),# 学习率调度器状态
-                "best_f1": float(self.best_dev_f1)
+                "model_state_dict": self.model.state_dict(),       
+                "optimizer_state_dict": self.opt.state_dict(),     
+                "scheduler_state_dict": self.scheduler.state_dict(),
+                "best_f1": float(self.best_dev_f1),
+                "id2label": self.id2label,
+                "config": self.cfg,
+                "epoch": self.current_epoch,
+                "dataset_name": self.cfg.get("dataset_name", "unknown"),
+                "lr": self.cfg.get("lr", -1),
+                "batch_size": self.cfg.get("batch_size", -1)
             }
             save_dir = os.path.dirname(self.save_path)
             if save_dir:  

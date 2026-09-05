@@ -98,12 +98,14 @@ def main():
         scheduler,
         criterion,
         device,
-        save_path=cfg["save_path"],
-        id2label = id2label,
+        cfg["save_path"],
+        id2label,
+        cfg,
         patience = 3
     )
     
     for epoch in range(cfg["epochs"]):
+        trainer.current_epoch = epoch
         print(f"Epoch {epoch+1}/{cfg['epochs']}")
         train_loss, train_p, train_r,train_f1 = trainer.train_epoch(train_loader)
         print(f"Train Loss: {train_loss:.4f}, P: {train_p:.4f}, R: {train_r:.4f}, F1: {train_f1:.4f}")

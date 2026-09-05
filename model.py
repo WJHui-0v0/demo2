@@ -13,7 +13,8 @@ class BERTNER(nn.Module):
         
         self.dropout = nn.Dropout(cfg.get("dropout", 0.1))
         self.classifier = nn.Linear(hidden_size, self.num_labels)
-
+        self.loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
+    
     def forward(self, input_ids, attention_mask,labels=None):
         outputs = self.bert(input_ids, attention_mask)
         sequence_output = outputs.last_hidden_state
@@ -22,9 +23,11 @@ class BERTNER(nn.Module):
         
         loss = None
         if labels is not None:
-            loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
-            loss = loss_fn(
+            loss = self.loss_fn(
                 logits.view(-1, logits.size(-1)),
                 labels.view(-1)
             )
-        return logits
+        return {
+            "loss": loss,
+            "logits": logits
+        }
