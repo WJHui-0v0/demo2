@@ -1,4 +1,71 @@
-# Byte-compiled / optimized / DLL files
+pretrain/
+autopanel.security.db
+
+
+
+# ========== AutoDL 云服务器专属补充 ==========
+autodl-tmp/
+*.sock
+tmp/
+temp/
+# Swanlab/实验可视化缓存
+.swanlab/
+# Huggingface 预训练模型缓存(非常关键！防止把几十Gbert权重上传github)
+.cache/
+~/.cache/huggingface
+huggingface_cache/
+# 本地输出结果、预测文件
+output/
+result/
+pred/
+# 大的csv/json数据集导出
+*.parquet
+# AutoDL平台监控文件
+autopanel.monitor.db
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+*$py.class
+
+# 日志文件
+*.log
+logs/
+log/
+
+# 模型权重、大文件（最重要！别传巨大模型到github）
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+checkpoints/
+weights/
+models/
+
+# 数据集（数据集体积很大严禁上传）
+dataset/
+data/
+datasets/
+
+# 虚拟环境
+venv/
+env/
+.venv/
+
+# jupyter 缓存
+.ipynb_checkpoints/
+
+# 系统临时文件
+.DS_Store
+Thumbs.db
+
+# 编辑器缓存
+.vscode/
+*.swp
+*.swo# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class

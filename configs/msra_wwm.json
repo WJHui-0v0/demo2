@@ -1,0 +1,18 @@
+{
+    "experiment_name":"msra_wwm",
+    "model_name":"/root/autodl-tmp/pretrain/hfl-chinese-bert-wwm",
+    "dataset_name":"msra",
+    "train_path":"./data/msra/train.txt",
+    "dev_path":"./data/msra/dev.txt",
+    "test_path":"./data/msra/test.txt",
+    "batch_size":16,
+    "epochs":10,
+    "lr":0.00002,
+    "max_length":128,
+    "dropout":0.1,
+    "weight_decay":0.01,
+    "warmup_ratio":0.1,
+    "seed":42,
+    "save_path": "./checkpoints/msra_wwm",
+    "log_path": "./logs/msra_wwm"
+}

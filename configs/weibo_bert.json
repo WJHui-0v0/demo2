@@ -1,0 +1,18 @@
+{
+    "experiment_name": "weibo_bert",
+    "model_name": "/root/autodl-tmp/pretrain/bert-base-chinese",
+    "dataset_name": "weibo",
+    "train_path": "./data/weibo/train.txt",
+    "dev_path": "./data/weibo/dev.txt",
+    "test_path": "./data/weibo/test.txt",
+    "batch_size": 16,
+    "epochs": 10,
+    "lr": 0.00002,
+    "max_length": 128,
+    "dropout": 0.1,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "seed": 42,
+    "save_path": "./checkpoints/weibo_bert",
+    "log_path": "./logs/weibo_bert"     
+}

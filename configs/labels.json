@@ -1,0 +1,30 @@
+{
+    "weibo": [
+        "O",
+        "B-GPE.NAM",
+        "B-GPE.NOM",
+        "B-LOC.NAM",
+        "B-LOC.NOM",
+        "B-ORG.NAM",
+        "B-ORG.NOM",
+        "B-PER.NAM",
+        "B-PER.NOM",
+        "I-GPE.NAM",
+        "I-GPE.NOM",
+        "I-LOC.NAM",
+        "I-LOC.NOM",
+        "I-ORG.NAM",
+        "I-ORG.NOM",
+        "I-PER.NAM",
+        "I-PER.NOM"
+    ],
+    "msra": [
+        "O",
+        "B-LOC",
+        "B-ORG",
+        "B-PER",
+        "I-LOC",
+        "I-ORG",
+        "I-PER"
+    ]
+}
