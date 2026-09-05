@@ -93,7 +93,7 @@ class DataCollatorForNER:
 
 
 if __name__ == "__main__":
-    from config import load_config
+    from utils import load_config
     cfg = load_config()
     dataset = NERDataset(cfg, mode="train")
     print("数据数量:",len(dataset))
