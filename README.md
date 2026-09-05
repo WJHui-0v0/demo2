@@ -119,10 +119,10 @@ python predict.py --config configs/weibo_wwm.json --text "马云去杭州开会"
 ### （1）4组对比实验测试集指标
 | 模型配置 | 精确率(P) | 召回率(R) | F1‑Score |
 |:---|:---:|:---:|:---:|
-| MSRA + BERT‑base‑chinese | 0.8649 | 0.8731 | 0.8690 |
-| MSRA + BERT‑WWM | 0.8735 | 0.8874 | 0.8804 |
-| Weibo + BERT‑base‑chinese | 0.5428 | 0.6311 | 0.5836 |
-| Weibo + BERT‑WWM | 0.5609 | 0.6262 | 0.5917 |
+| MSRA + BERT‑base‑chinese | 0.8908 | 0.9056 | 0.8982 |
+| MSRA + BERT‑WWM | 0.8851 | 0.9040 | 0.8945 |
+| Weibo + BERT‑base‑chinese | 0.6068 | 0.6966 | 0.6486 |
+| Weibo + BERT‑WWM | 0.6193 | 0.6869 | 0.6513 |
 
 - swanlab实验日志：https://swanlab.cn/@displan0v0/demo2/overview
 
@@ -142,6 +142,27 @@ MSRA数据集表现远好于Weibo数据集。MSRA为新闻领域规范书面文�
 3. **召回率普遍高于精确率**
 
 两组Weibo实验召回率明显高于精确率，说明模型偏向于更多地预测实体，出现一部分**实体误检（负样本被预测成实体）**，导致精确率被拉低。
+
+4. **warmup 与 weight_decay 优化带来显著性能提升**
+
+- 结果对比:
+
+| 模型配置 | 精确率(P) | 召回率(R) | F1‑Score |
+|:---|:---:|:---:|:---:|
+| MSRA + BERT‑base‑chinese（优化前） | 0.8649 | 0.8731 | 0.8690 |
+| MSRA + BERT‑base‑chinese（优化后） | 0.8908 | 0.9056 | 0.8982 |
+| MSRA + BERT‑WWM（优化前） | 0.8735 | 0.8874 | 0.8804 |
+| MSRA + BERT‑WWM（优化后） | 0.8851 | 0.9040 | 0.8945 |
+| Weibo + BERT‑base‑chinese（优化前） | 0.5428 | 0.6311 | 0.5836 |
+| Weibo + BERT‑base‑chinese（优化后） | 0.6068 | 0.6966 | 0.6486 |
+| Weibo + BERT‑WWM（优化前） | 0.5609 | 0.6262 | 0.5917 |
+| Weibo + BERT‑WWM（优化后） | 0.6193 | 0.6869 | 0.6513 |
+
+
+
+对比优化前后的测试结果，两组数据集、两种预训练模型均获得明显的指标上涨：MSRA 数据集 F1 提升幅度 1.41%‑2.92%；难度更高的 Weibo 数据集 F1 涨幅达到 5.96%‑6.50%。
+
+学习率预热`warmup_ratio`避免微调初期过大的学习率破坏 BERT 预训练得到的底层语义知识；`weight_decay`权重衰减引入 L2 正则，降低模型对训练集噪声的拟合程度。二者搭配使用，引导模型收敛至泛化能力更强的最优解。同时早停策略、最优 checkpoint 保存、loss 计算修复作为底层保障，保证上述超参数优化的收益得以落地留存。
 
 
 
