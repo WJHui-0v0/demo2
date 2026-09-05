@@ -104,16 +104,13 @@ def main():
     for epoch in range(cfg["epochs"]):
         trainer.current_epoch = epoch
         print(f"Epoch {epoch+1}/{cfg['epochs']}")
-        train_loss, train_p, train_r,train_f1 = trainer.train_epoch(train_loader)
-        print(f"Train Loss: {train_loss:.4f}, P: {train_p:.4f}, R: {train_r:.4f}, F1: {train_f1:.4f}")
+        train_loss = trainer.train_epoch(train_loader)
+        print(f"Train Loss: {train_loss:.4f}")
         dev_loss, dev_p, dev_r, dev_f1, _, _, early_stop = trainer.eval_epoch(dev_loader,is_dev=True)
         print(f"Dev Loss: {dev_loss:.4f}, P: {dev_p:.4f}, R: {dev_r:.4f}, F1: {dev_f1:.4f}")
 
         swanlab.log({
             "train/loss": train_loss,
-            "train/precision": train_p,
-            "train/recall": train_r,
-            "train/f1": train_f1,
             "dev/loss": dev_loss,
             "dev/precision": dev_p,
             "dev/recall": dev_r,
