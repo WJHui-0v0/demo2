@@ -12,14 +12,14 @@ class Trainer:
         self.device = device
         self.save_path = save_path
         self.id2label = id2label
-        self.best_dev_f1 = 0.0
+        self.best_dev_f1 = float("-inf")
         
         self.patience = patience      
         self.early_stop_counter = 0   
         self.early_stop = False
         
     def early_stop_check(self, current_f1):
-        if current_f1 > self.best_dev_f1:
+        if current_f1 >= self.best_dev_f1:
             self.best_dev_f1 = current_f1
             self.early_stop_counter = 0
             checkpoint = {
