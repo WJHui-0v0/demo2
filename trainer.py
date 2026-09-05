@@ -70,8 +70,6 @@ class Trainer:
     def train_epoch(self,loader):
         self.model.train()
         total_loss = 0.0
-        pred_tags = []
-        true_tags = []
         
         for batch in tqdm(loader, desc="Train"):
             input_ids = batch["input_ids"].to(self.device)
@@ -82,22 +80,16 @@ class Trainer:
 
             out = self.model(input_ids, mask, labels)
             loss = out["loss"]
-            logits = out["logits"]
             
             loss.backward()
             self.opt.step()
             self.scheduler.step()
             
             total_loss += loss.item()
-            batch_pred, batch_true = self._decode_batch(logits, labels)
-            pred_tags.extend(batch_pred)
-            true_tags.extend(batch_true)
             
         avg_loss = total_loss / len(loader)    
-        metric = Metric(true_tags, pred_tags)
-        p, r, f1 = metric.precision, metric.recall, metric.f1
 
-        return avg_loss, p, r, f1
+        return avg_loss
         
     def eval_epoch(self,loader,is_dev):
         self.model.eval() 
