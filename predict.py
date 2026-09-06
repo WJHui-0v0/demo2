@@ -24,10 +24,8 @@ def predict(text, model, tokenizer, id2label, device, max_length=128):
     model.eval()
     
     with torch.no_grad():
-        logits = model(
-            input_ids=model_inputs["input_ids"],
-            attention_mask=model_inputs.get("attention_mask"),
-        )
+        outputs = model(model_inputs["input_ids"],model_inputs.get("attention_mask"))
+        logits = outputs["logits"]
         pred_ids = torch.argmax(logits, dim=-1)[0].detach().cpu().tolist()
 
     word_ids = encoded.word_ids(batch_index=0)
@@ -94,7 +92,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = BERTNER(cfg).to(device)
 
-    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     state_dict = checkpoint.get("model_state_dict", checkpoint)
     model.load_state_dict(state_dict)
     print(f"成功加载最优模型权重: {checkpoint_path}")
